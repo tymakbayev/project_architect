@@ -149,6 +149,39 @@ curl -X POST http://localhost:8000/generate \
   --output generated_project.zip
 ```
 
+#### Available API Endpoints
+
+1. **Generate a Project (Async)**
+   ```
+   POST /projects
+   ```
+   This starts project generation asynchronously and returns a project ID.
+
+2. **Check Project Status**
+   ```
+   GET /projects/{project_id}
+   ```
+   Check the status of an ongoing project generation.
+
+3. **Download Generated Project**
+   ```
+   GET /projects/{project_id}/download
+   ```
+   Download the completed project as a ZIP archive.
+
+4. **Generate Project (Sync)**
+   ```
+   POST /projects/sync
+   ```
+   Generate a project synchronously (blocking operation).
+
+Example cURL request:
+```bash
+curl -X POST http://localhost:8000/projects \
+  -H "Content-Type: application/json" \
+  -d '{"description": "Create a FastAPI backend with SQLAlchemy ORM, user authentication, and PostgreSQL database"}'
+```
+
 ## ⚙️ Configuration
 
 Project Architect can be configured using environment variables, a `.env` file, or through the configuration files in the `config/` directory.
@@ -250,61 +283,7 @@ project_architect/
 
 ## 📚 API Documentation
 
-### ProjectGenerator
-
-The main class for generating projects.
-
-```python
-from src.project_generator import ProjectGenerator
-
-generator = ProjectGenerator()
-generator.generate_project(
-    description="Project description",
-    output_dir="./output",
-    config_path=None  # Optional custom config
-)
-```
-
-#### Methods
-
-| Method | Description |
-|--------|-------------|
-| `generate_project(description, output_dir, config_path=None)` | Generate a complete project |
-| `analyze_project(description)` | Only analyze the project type and requirements |
-| `generate_architecture(description, project_type)` | Generate architecture plan only |
-
-### ProjectAnalyzer
-
-Analyzes project descriptions to determine project type and requirements.
-
-```python
-from src.core.project_analyzer import ProjectAnalyzer
-
-analyzer = ProjectAnalyzer()
-project_type = analyzer.analyze_project_description("A Flask web app with SQLAlchemy")
-requirements = analyzer.extract_key_requirements("A Flask web app with SQLAlchemy")
-```
-
-### ArchitectureGenerator
-
-Generates architecture plans based on project type and requirements.
-
-```python
-from src.core.architecture_generator import ArchitectureGenerator
-
-generator = ArchitectureGenerator()
-architecture = generator.generate_architecture(project_type, requirements)
-```
-
-### REST API Endpoints
-
-| Endpoint | Method | Description |
-|----------|--------|-------------|
-| `/generate` | POST | Generate a complete project |
-| `/analyze` | POST | Analyze a project description |
-| `/architecture` | POST | Generate architecture plan only |
-
-For complete API documentation, see [docs/API.md](docs/API.md).
+For detailed API documentation, see [docs/API.md](docs/API.md).
 
 ## 🛠️ Development
 

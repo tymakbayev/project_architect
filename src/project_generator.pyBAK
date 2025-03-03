@@ -10,7 +10,7 @@ from src.core.project_structure_generator import ProjectStructureGenerator
 from src.core.code_generator import CodeGenerator
 from src.core.dependency_manager import DependencyManager
 from src.output.project_output_manager import ProjectOutputManager
-from src.models.project_type import ProjectType, ProjectTypeEnum
+#from src.models.project_type import ProjectType, ProjectTypeEnum
 
 class ProjectGenerator:
     """
@@ -44,25 +44,14 @@ class ProjectGenerator:
         
         try:
             # Step 1: Analyze project description
-            project_type_str, requirements = self.project_analyzer.analyze(description)
-            self.logger.info(f"Project analyzed as type: {project_type_str}")
-            
-            # Convert string project type to ProjectType object
-            try:
-                project_type_enum = ProjectTypeEnum[project_type_str.upper()]
-                project_type = ProjectType(
-                    type_enum=project_type_enum,
-                    name=project_type_str,
-                    description=f"Project type derived from description: {description[:50]}..."
-                )
-            except KeyError:
-                self.logger.error(f"Unsupported project type: {project_type_str}")
-                raise ValueError(f"Unsupported project type: {project_type_str}")
-            
+            project_type, requirements = self.project_analyzer.analyze(description)
+            self.logger.info(f"Project analyzed as type: {project_type}")
+
             # Step 2: Generate architecture plan
             architecture_plan = self.architecture_generator.generate_architecture(
                 project_type, requirements
             )
+
             self.logger.info("Architecture plan generated")
             
             # Step 3: Generate project structure
@@ -75,7 +64,7 @@ class ProjectGenerator:
             
             # Step 5: Determine project dependencies
             dependencies = self.dependency_manager.determine_dependencies(
-                project_type_str, architecture_plan
+                project_type, architecture_plan
             )
             self.logger.info(f"Determined {len(dependencies)} dependencies")
             
@@ -92,7 +81,7 @@ class ProjectGenerator:
             # Prepare result
             result = {
                 "project_id": str(uuid.uuid4()),
-                "project_type": project_type_str,
+                "project_type": project_type,
                 "architecture": architecture_plan,
                 "structure": project_structure,
                 "files": list(all_files.keys()),
