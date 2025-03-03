@@ -9,12 +9,13 @@ the project type and extract key requirements using the Anthropic Claude API.
 
 import os
 import logging
-from typing import List, Dict, Any, Optional
+from typing import List, Dict, Any, Optional, Tuple
 
 from anthropic import Anthropic
 
 from src.models.project_type import ProjectType, ProjectTypeEnum
 from src.clients.anthropic_client import AnthropicClient
+from src.config.config import Config
 
 
 class ProjectAnalyzer:
@@ -31,7 +32,12 @@ class ProjectAnalyzer:
             api_key: Optional Anthropic API key. If not provided, will attempt
                     to use the ANTHROPIC_API_KEY environment variable.
         """
-        self.anthropic_client = AnthropicClient(api_key)
+        # Create a Config object and set the API key if provided
+        config = Config()
+        if api_key:
+            config.anthropic_api_key = api_key
+        
+        self.anthropic_client = AnthropicClient(config)
         self.logger = logging.getLogger(__name__)
 
     def analyze_project_description(self, description: str) -> ProjectType:
@@ -116,3 +122,20 @@ class ProjectAnalyzer:
         
         self.logger.info(f"Extracted {len(requirements)} requirements")
         return requirements
+        
+    def analyze(self, description: str) -> Tuple[str, List[str]]:
+        """Analyze the project description to determine type and requirements.
+        
+        This is a convenience method that combines analyze_project_description
+        and extract_key_requirements.
+        
+        Args:
+            description: The project description text
+            
+        Returns:
+            Tuple containing project type and list of requirements
+        """
+        project_type = self.analyze_project_description(description)
+        requirements = self.extract_key_requirements(description)
+        
+        return project_type.name, requirements

@@ -3,12 +3,12 @@ import logging
 import asyncio
 from typing import Dict, Any, Optional, List, Tuple
 
-# These imports would be implemented in your actual project
-from src.analysis.project_analyzer import ProjectAnalyzer
-from src.architecture.architecture_generator import ArchitectureGenerator
-from src.structure.project_structure_generator import ProjectStructureGenerator
-from src.code.code_generator import CodeGenerator
-from src.dependencies.dependency_manager import DependencyManager
+# Updated imports to match the actual project structure
+from src.core.project_analyzer import ProjectAnalyzer
+from src.core.architecture_generator import ArchitectureGenerator
+from src.core.project_structure_generator import ProjectStructureGenerator
+from src.core.code_generator import CodeGenerator
+from src.core.dependency_manager import DependencyManager
 from src.output.project_output_manager import ProjectOutputManager
 
 class ProjectGenerator:

@@ -104,3 +104,17 @@ class AnthropicClient:
                 result = {"raw_response": response}
         
         return result
+    
+    def generate_response(self, prompt: str, system_prompt: Optional[str] = None) -> str:
+        """Generate a response from Claude for a given prompt.
+        
+        This is an alias for ask_claude for better semantics in some contexts.
+        
+        Args:
+            prompt: The prompt to send to Claude
+            system_prompt: Optional system prompt to guide Claude's behavior
+            
+        Returns:
+            Claude's response as a string
+        """
+        return self.ask_claude(prompt, system_prompt)

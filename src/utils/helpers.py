@@ -983,4 +983,66 @@ def safe_delete(path: Union[str, Path]) -> bool:
 
 
 def get_file_modification_time(file_path: Union[str, Path]) -> float:
+    """Get the modification time of a file.
+    
+    Args:
+        file_path: Path to the file
+        
+    Returns:
+        The modification time as a timestamp
+        
+    Raises:
+        FileNotFoundError: If the file doesn't exist
     """
+    file_path = Path(file_path)
+    
+    if not file_path.exists():
+        raise FileNotFoundError(f"File not found: {file_path}")
+    
+    return file_path.stat().st_mtime
+
+
+def is_path_writable(path: Union[str, Path]) -> bool:
+    """Check if a path is writable.
+    
+    Args:
+        path: Path to check
+        
+    Returns:
+        True if the path is writable, False otherwise
+    """
+    path = Path(path)
+    
+    if path.exists():
+        # Check if the existing path is writable
+        return os.access(str(path), os.W_OK)
+    else:
+        # Check if the parent directory is writable
+        parent_dir = path.parent
+        return parent_dir.exists() and os.access(str(parent_dir), os.W_OK)
+
+
+def get_file_creation_time(file_path: Union[str, Path]) -> float:
+    """Get the creation time of a file.
+    
+    Note that this may not be available on all platforms.
+    
+    Args:
+        file_path: Path to the file
+        
+    Returns:
+        The creation time as a timestamp
+        
+    Raises:
+        FileNotFoundError: If the file doesn't exist
+    """
+    file_path = Path(file_path)
+    
+    if not file_path.exists():
+        raise FileNotFoundError(f"File not found: {file_path}")
+    
+    try:
+        return file_path.stat().st_ctime
+    except AttributeError:
+        # Some platforms don't support creation time
+        return file_path.stat().st_mtime  # Fall back to modification time

@@ -28,7 +28,7 @@ class Repository:
         self.topics = data.get('topics', [])
         self.default_branch = data.get('default_branch', 'main')
 
-class GitHubClient:
+class GithubClient:
     """Client for interacting with GitHub API.
     
     This class provides methods to search repositories, get repository structure,

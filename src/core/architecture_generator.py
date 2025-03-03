@@ -18,6 +18,7 @@ from src.models.architecture_plan import (
     DataFlow
 )
 from src.clients.anthropic_client import AnthropicClient
+from src.config.config import Config
 
 
 class ArchitectureGenerator:
@@ -34,7 +35,12 @@ class ArchitectureGenerator:
             api_key: Optional Anthropic API key. If not provided, will attempt
                     to use the ANTHROPIC_API_KEY environment variable.
         """
-        self.anthropic_client = AnthropicClient(api_key)
+        # Create a Config object and set the API key if provided
+        config = Config()
+        if api_key:
+            config.anthropic_api_key = api_key
+            
+        self.anthropic_client = AnthropicClient(config)
         self.logger = logging.getLogger(__name__)
 
     def generate_architecture(self, project_type: ProjectType, requirements: List[str]) -> ArchitecturePlan:
